@@ -1,0 +1,30 @@
+version: '3'
+services:
+  superset:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: superset 
+    restart: always
+    labels: # Traefik configuration.
+      - traefik.http.routers.superset.rule=Host(`${VIRTUAL_HOST}`)
+      - traefik.http.routers.superset.tls=true
+      - traefik.http.routers.superset.tls.certresolver=lets-encrypt
+      - traefik.http.routers.superset.service=superset-service
+      - traefik.http.services.superset-service.loadbalancer.server.port=${VIRTUAL_PORT}
+    environment:
+      MAPBOX_API_KEY: ${MAPBOX_API_KEY}
+    volumes:
+      - ./superset_config:/etc/superset
+      - ./uploads:/uploads
+      - home-superset:/home/superset
+      - lib-superset:/var/lib/superset
+
+volumes:
+  home-superset:
+  lib-superset:
+
+networks:
+  default:
+    external:
+      name: webproxy

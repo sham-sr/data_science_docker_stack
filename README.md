@@ -20,6 +20,7 @@ The docker-compose parameters are set in .env files. Before you build or run the
 2. Run traefik   
 You must have domains defined for all services with the specified" A records " of white IP addresses.
 Go to the traefik_proxy folder, Change permissions of acme.json file and run traefik.  
+Rename to *.toml and edit traefik.toml.example traefik_dynamic.toml.example
 `chmod 600 acme.json
 docker-compose up -d`
 3. Go to the mysql_prod folder  

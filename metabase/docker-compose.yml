@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  metabase:
+    image: metabase/metabase:v0.37.9
+    restart: always
+    container_name: metabase
+    labels: # Traefik configuration.
+      - traefik.http.routers.metabase.rule=Host(`${VIRTUAL_HOST}`)
+      - traefik.http.routers.metabase.tls=true
+      - traefik.http.routers.metabase.tls.certresolver=lets-encrypt
+      - traefik.http.routers.metabase.service=metabase-service
+      - traefik.http.services.metabase-service.loadbalancer.server.port=${VIRTUAL_PORT}    
+    environment:
+      MB_DB_FILE: '${MB_DB_FILE}'
+      MB_DB_TYPE: '${DB_TYPE}'
+      MB_DB_DBNAME: '${DB_NAME}'
+      MB_DB_PORT: '${DB_PORT}'
+      MB_DB_USER: '${DB_USER}'
+      MB_DB_HOST: 'mysql'
+      MB_DB_PASS: '${DB_PASSWORD}'
+      MB_ENCRYPTION_SECRET_KEY: '${MB_ENCRYPTION_SECRET_KEY}'
+      MB_REPORT_TIMEZONE: '${MB_REPORT_TIMEZONE}'
+    volumes:
+      # Volumes where Metabase data will be persisted
+      - mb-data:/metabase-data
+      - './plugins:/plugins'
+
+volumes:
+  mb-data:
+
+networks:
+  default:
+    external:
+      name: webproxy

@@ -1,0 +1,33 @@
+#
+JUPYTERHUB_VERSION=1.3
+#
+OAUTH_CLIENT_ID=jupyterhub
+OAUTH_CLIENT_SECRET=5b56adfa-ecd6-4980-97a9-f598adb642e3
+KEYCLOAK_KNOWN_URL='https://keycloak.yourdomain.ru/auth/realms/yourdomain'
+KEYCLOAK_ADMIN_ROLE='admins'
+KEYCLOAK_LOGOUT_URL='https://jupyterhub.yourdomain.ru/hub/login'
+KEYCLOAK_CALLBACK_URL='https://jupyterhub.yourdomain.ru/hub/oauth_callback' 
+JUPYTERHUB_CRYPT_KEY=bd393e88af4be5cbd09b8e3efb132faa5875a0650bce0907c1f4e67b3eeb4e1b
+
+#For standard version, has a problem with the logout
+#OAUTH2_TLS_VERIFY=0 
+#OAUTH2_AUTHORIZE_URL=https://keycloak.yourdomain.ru/auth/realms/yourdomain/protocol/openid-connect/auth
+#OAUTH2_TOKEN_URL=https://keycloak.yourdomain.ru/auth/realms/yourdomain/protocol/openid-connect/token
+#OAUTH_CALLBACK_URL=https://jupyterhub.yourdomain.ru/hub/oauth_callback
+#OAUTH2_USERDATA_URL=https://keycloak.yourdomain.ru/auth/realms/yourdomain/protocol/openid-connect/userinfo
+
+#dict key-visible name: value image name
+DOCKER_JUPYTER_IMAGE="{'scipy':'jupyterlab_scipy','osmnx':'gboeing/osmnx','dotnet_interactive':'jupyterlab_dotnet'}"
+
+#
+DOCKER_NETWORK_NAME='webproxy'
+HUB_HOST='jupyterhub'
+
+#
+DOCKER_NOTEBOOK_DIR='/home/jovyan/'
+DATA_VOLUME_HOST=jupyterhub-data
+DATA_VOLUME_CONTAINER=/srv/jupyterhub
+
+#
+VIRTUAL_HOST_HUB=jupyterhub.yourdomain.ru
+VIRTUAL_PORT_HUB=8000

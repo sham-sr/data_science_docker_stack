@@ -56,7 +56,7 @@ to build an image select folder and кгт build
 if you want to run notebook in single mode, generate the token with the generate_token script.py and add it to .env  
 `docker-compose.yml up -d`
 7. Run JupyterHub  
-JupyterHub use [KeyCloakAuthenticator](https://github.com/swan-cern/jupyterhub-extensions/tree/master/KeyCloakAuthenticator) 
+JupyterHub use [KeyCloakAuthenticator](https://github.com/swan-cern/jupyterhub-extensions/tree/master/KeyCloakAuthenticator)   
 Edit, .env and jupyterhub_config.py. Run in jupyterhub folder  
 `docker-compose build
 docker-compose up –d`

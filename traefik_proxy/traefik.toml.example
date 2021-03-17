@@ -1,0 +1,30 @@
+# sudo apt-get install apache2-utils
+# command to get pass hash -  htpasswd -nb admin secure_password
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+    [entryPoints.web.http.redirections.entryPoint]
+      to = "websecure"
+      scheme = "https"
+#  for airflow
+    [entryPoints.web.forwardedHeaders]
+      insecure = true
+
+  [entryPoints.websecure]
+    address = ":443"
+
+[api]
+  dashboard = true
+
+[certificatesResolvers.lets-encrypt.acme]
+  email = "admin@yourdomain.ru"
+  storage = "acme.json"
+  [certificatesResolvers.lets-encrypt.acme.tlsChallenge]
+
+[providers.docker]
+  watch = true
+  network = "webproxy"
+
+[providers.file]
+  filename = "traefik_dynamic.toml"
+  watch = true

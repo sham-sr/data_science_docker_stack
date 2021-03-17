@@ -1,0 +1,29 @@
+# code-server home dir
+CODE_WORKDIR=${HOME}/work
+
+#run command > streamlit run --help to see all env
+STREAMLIT_APP=${HOME}/work/src/streamlitapp/app.py
+STREAMLIT_MAPBOX_TOKEN='yourtoken'
+STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=False
+STREAMLIT_SERVER_ENABLE_CORS=True
+
+#run command > bokeh serve --help to see all env
+#https://docs.bokeh.org/en/latest/docs/reference/settings.html#bokeh-settings
+BOKEH_APP=${HOME}/work/src/bokehapp/
+# set base hub url
+BOKEH_ALLOW_WS_ORIGIN='jupyterhub.yourdomain.ru'
+# set as your service proxy name
+BOKEH_PREFIX='bokeh_web'
+
+#panel use same bokeh server, panel serve --help to see all env
+PANEL_APP=${HOME}/work/src/panelapp/app.py
+# set as your service proxy name
+PANEL_PREFIX='panel_web'
+# set base hub url
+PANEL_ALLOW_WS_ORIGIN='jupyterhub.yourdomain.ru'
+
+# flask run settings
+FLASK_APP=${HOME}/work/src/flaskapp/app.py
+FLASK_ENV=development
+FLASK_DEBUG=0
+FLASK_SKIP_DOTENV=1

@@ -1,0 +1,149 @@
+version: '3'
+
+services:
+
+  initdb:
+    image: airflow
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    container_name: airflow_initdb
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/usr/local/airflow/log
+      - ./files:/opt/airflow/files
+      - ./plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint: /bin/bash
+    # use in swarm
+    #deploy:
+    #  restart_policy:
+    #    condition: on-failure
+    #    delay: 8s
+    #    max_attempts: 5
+    command: -c "airflow db init && airflow users create --firstname Sergey --lastname Shamsuyarov --email shamsr.rus@gmail.com --password ${AIRFLOW_ADMIN_PASSWORD} --username airflow_admin --role Admin"
+
+  webserver:
+    env_file:
+      - .env
+    image: airflow
+    container_name: airflow_webserver
+    depends_on:
+      - initdb
+    labels: # Traefik configuration.
+      - traefik.http.routers.airflow.rule=Host(`${VIRTUAL_HOST_AF}`)
+      - traefik.http.routers.airflow.tls=true
+      - traefik.http.routers.airflow.tls.certresolver=lets-encrypt
+      - traefik.http.routers.airflow.service=airflow-service
+      - traefik.http.services.airflow-service.loadbalancer.server.port=${VIRTUAL_PORT_AF}
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/usr/local/airflow/log
+      - ./files:/opt/airflow/files
+      - ./plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    #deploy:
+    #  restart_policy:
+    #    condition: on-failure
+    #    delay: 5s
+    #    max_attempts: 3
+    #    window: 120s
+    command: webserver
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f /opt/airflow/airflow-webserver.pid ]"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+ 
+  flower:
+    image: airflow
+    env_file:
+      - .env
+    container_name: flower
+    labels: # Traefik configuration.
+      - traefik.http.routers.flower.rule=Host(`${VIRTUAL_HOST_FLW}`)
+      - traefik.http.routers.flower.tls=true
+      - traefik.http.routers.flower.tls.certresolver=lets-encrypt
+      - traefik.http.routers.flower.service=flower-service
+      - traefik.http.services.flower-service.loadbalancer.server.port=${VIRTUAL_PORT_FLW}
+    restart: always
+    #deploy:
+    #  restart_policy:
+    #    condition: on-failure
+    #    delay: 8s
+    #    max_attempts: 3
+    volumes:
+      - ./logs:/usr/local/airflow/log
+
+    command: celery flower
+ 
+  scheduler:
+    image: airflow
+    env_file:
+      - .env
+    container_name: airflow_scheduler
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/usr/local/airflow/log
+      - ./files:/opt/airflow/files
+      - ./plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: scheduler
+    depends_on:
+      - initdb
+    restart: always
+    #deploy:
+    #  restart_policy:
+    #    condition: any
+    #    delay: 5s
+    #    window: 120s
+  
+  worker_1:
+    image: airflow
+    env_file:
+      - .env
+    container_name: airflow_worker_1
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/usr/local/airflow/log
+      - ./files:/opt/airflow/files
+      - ./plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: celery worker -H worker_1_name
+    depends_on:
+      - scheduler
+    restart: always
+    #deploy:
+    #  restart_policy:
+    #    condition: on-failure
+    #    delay: 8s
+    #    max_attempts: 3
+
+  worker_2:
+    image: airflow
+    env_file:
+      - .env
+    container_name: airflow_worker_2
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/usr/local/airflow/log
+      - ./files:/opt/airflow/files
+      - ./plugins:/opt/airflow/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: celery worker -H worker_2_name
+    depends_on:
+      - scheduler
+    restart: always
+    #deploy:
+    #  restart_policy:
+    #    condition: on-failure
+    #    delay: 8s
+    #    max_attempts: 3
+
+networks:
+  default:
+    external:
+      name: webproxy

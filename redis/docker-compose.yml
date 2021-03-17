@@ -1,0 +1,16 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    volumes:
+      - redis:/data
+ 
+volumes:
+  redis:
+
+networks:
+  default:
+    external:
+      name: webproxy

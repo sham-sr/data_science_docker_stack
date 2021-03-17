@@ -1,0 +1,63 @@
+import os
+import sys
+import jwt
+import keycloakauthenticator
+import ast
+
+## Generic
+c.JupyterHub.admin_access = True
+c.Spawner.cmd=["jupyter-labhub"]
+c.Spawner.environment = {'JUPYTERHUB_SINGLEUSER_APP': "jupyter_server.serverapp.ServerApp"}
+
+## Authenticator keycloak https://github.com/swan-cern/jupyterhub-extensions/tree/master/KeyCloakAuthenticator
+c.JupyterHub.authenticator_class = 'keycloakauthenticator.KeyCloakAuthenticator'
+c.KeyCloakAuthenticator.username_key = 'preferred_username'
+c.KeyCloakAuthenticator.logout_redirect_uri = os.environ.get('KEYCLOAK_LOGOUT_URL')
+c.KeyCloakAuthenticator.oauth_callback_url =  os.environ.get('KEYCLOAK_CALLBACK_URL')
+c.KeyCloakAuthenticator.oidc_issuer = os.environ.get('KEYCLOAK_KNOWN_URL')
+c.KeyCloakAuthenticator.accepted_roles = set()
+c.KeyCloakAuthenticator.admin_role = os.environ.get('KEYCLOAK_ADMIN_ROLE')
+
+#Authenticator LocalGenericOAuthenticator has a problem with the logout (session is not free after logout)
+#from oauthenticator.generic import LocalGenericOAuthenticator
+#c.JupyterHub.authenticator_class = LocalGenericOAuthenticator
+#c.GenericOAuthenticator.login_service = 'insert_your_login_service'
+#c.GenericOAuthenticator.userdata_params = {"state": "state"}
+#c.GenericOAuthenticator.auto_login = False
+#c.GenericOAuthenticator.scope = ['openid']
+#c.GenericOAuthenticator.username_key = "preferred_username"
+#c.Authenticator.auto_login = False
+#c.GenericOAuthenticator.client_id = os.environ.get('OAUTH_CLIENT_ID')
+#c.LocalAuthenticator.create_system_users = True
+
+## Docker spawner
+c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
+img = ast.literal_eval(os.environ['DOCKER_JUPYTER_IMAGE'])
+c.DockerSpawner.image_whitelist = img
+c.DockerSpawner.network_name = os.environ['DOCKER_NETWORK_NAME']
+# See https://github.com/jupyterhub/dockerspawner/blob/master/examples/oauth/jupyterhub_config.py
+c.JupyterHub.hub_ip = os.environ['HUB_HOST']
+c.DockerSpawner.remove_containers = True
+
+# user data persistence
+# see https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
+notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/'
+c.DockerSpawner.notebook_dir = notebook_dir
+c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
+
+# Other stuff
+c.Spawner.cpu_limit = 5
+c.Spawner.mem_limit = '16G'
+
+## Services
+c.JupyterHub.services = [
+    {
+        'name': 'idle-culler',
+        'admin': True,
+        'command': [
+            sys.executable,
+            '-m', 'jupyterhub_idle_culler',
+            '--timeout=3600'
+        ],
+    }
+]

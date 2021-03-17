@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  jupyterhub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JUPYTERHUB_VERSION: ${JUPYTERHUB_VERSION}
+    image: jupyterhub_img
+    container_name: jupyterhub
+    restart: always
+    hostname: ${HUB_HOST}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jupyterhub-data:${DATA_VOLUME_CONTAINER}
+    environment:
+      - DOCKER_JUPYTER_IMAGE=${DOCKER_JUPYTER_IMAGE}
+      - DOCKER_NETWORK_NAME=${DOCKER_NETWORK_NAME}
+      - HUB_HOST=${HUB_HOST}
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      ##Authenticator keycloak https://github.com/swan-cern/jupyterhub-extensions/tree/master/KeyCloakAuthenticator
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+      - KEYCLOAK_KNOWN_URL=${KEYCLOAK_KNOWN_URL}
+      - KEYCLOAK_ADMIN_ROLE=${KEYCLOAK_ADMIN_ROLE}
+      - KEYCLOAK_LOGOUT_URL=${KEYCLOAK_LOGOUT_URL}
+      - KEYCLOAK_CALLBACK_URL=${KEYCLOAK_CALLBACK_URL}
+      - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
+      ##Authenticator LocalGenericOAuthenticator has a problem with the logout (session is not free after logout)
+      #- OAUTH2_TLS_VERIFY=${OAUTH2_TLS_VERIFY}
+      #- OAUTH2_AUTHORIZE_URL=${OAUTH2_AUTHORIZE_URL}
+      #- OAUTH2_TOKEN_URL=${OAUTH2_TOKEN_URL}
+      #- OAUTH_CALLBACK_URL=${OAUTH_CALLBACK_URL}
+      #- OAUTH2_USERDATA_URL=${OAUTH2_USERDATA_URL}
+      - DOCKER_NOTEBOOK_DIR=${DOCKER_NOTEBOOK_DIR}
+      - DATA_VOLUME_HOST=${DATA_VOLUME_HOST}
+      - DATA_VOLUME_CONTAINER=${DATA_VOLUME_CONTAINER}
+    labels: # Traefik configuration  
+      - traefik.http.routers.jupyterhub.rule=Host(`${VIRTUAL_HOST_HUB}`)
+      - traefik.http.routers.jupyterhub.tls=true
+      - traefik.http.routers.jupyterhub.tls.certresolver=lets-encrypt
+      - traefik.http.routers.jupyterhub.service=jupyterhub-service
+      - traefik.http.services.jupyterhub-service.loadbalancer.server.port=${VIRTUAL_PORT_HUB}
+    command: >
+      jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+    
+volumes:
+ jupyterhub-data:
+  
+networks:
+  default:
+    external:
+      name: webproxy

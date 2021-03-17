@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  keycloak:
+      image: keycloak
+      build:
+         context: .
+         dockerfile: Dockerfile      
+      container_name: keycloak
+      restart: always
+      volumes:
+        - keycloak_themes:/opt/jboss/keycloak/themes
+      environment:
+        DB_VENDOR: ${DB_VENDOR}
+        DB_ADDR: ${DB_ADDR}
+        DB_DATABASE: ${DB_DATABASE}
+        DB_USER: ${DB_USER}
+        DB_PASSWORD: ${DB_PASSWORD}
+        KEYCLOAK_USER: ${KEYCLOAK_USER}
+        KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+        PROXY_ADDRESS_FORWARDING: "true"
+        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the MySQL JDBC driver documentation in order to use it.
+        JDBC_PARAMS: "connectTimeout=36000&serverTimezone=Europe/Moscow&useSSL=false&characterEncoding=UTF-8&autoReconnect=true"
+      labels: # Traefik configuration.
+        - traefik.http.routers.keycloak.rule=Host(`${VIRTUAL_HOST}`)
+        - traefik.http.routers.keycloak.tls=true
+        - traefik.http.routers.keycloak.tls.certresolver=lets-encrypt
+        - traefik.http.routers.keycloak.service=keycloak-service
+        - traefik.http.services.keycloak-service.loadbalancer.server.port=${VIRTUAL_PORT}
+
+volumes:
+  keycloak_themes:
+
+networks:
+  default:
+    external:
+      name: webproxy
+      

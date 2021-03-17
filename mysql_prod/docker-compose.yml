@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  mysqldb:
+    image: mysql:8.0.23
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+      TZ: ${TIMEZONE}
+    ports:
+      - "${DB_EXT_PORT}:${DB_PORT}" # local port block on firewall
+    security_opt:
+    - seccomp:unconfined
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - './db/config-file:/etc/mysql/conf.d'
+      - './db/sql:/docker-entrypoint-initdb.d'
+ 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links: 
+      - mysqldb
+    labels: # Traefik configuration.
+      - traefik.http.routers.phpmyadmin.rule=Host(`${VIRTUAL_HOST}`)
+      - traefik.http.routers.phpmyadmin.tls=true
+      - traefik.http.routers.phpmyadmin.tls.certresolver=lets-encrypt
+      - traefik.http.routers.phpmyadmin.service=phpmyadmin-service
+      - traefik.http.services.phpmyadmin-service.loadbalancer.server.port=${VIRTUAL_PORT}
+
+    environment:
+       PMA_ARBITRARY: 1
+    depends_on:
+      - mysqldb
+
+volumes:
+  mysql-data:
+
+networks:
+  default:
+    external:
+      name: webproxy

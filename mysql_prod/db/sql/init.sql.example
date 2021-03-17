@@ -1,0 +1,15 @@
+CREATE DATABASE IF NOT EXISTS ppkwebstat;
+CREATE USER 'ppkwebstat_admin'@'%' IDENTIFIED WITH mysql_native_password BY 'Kolema_2159';
+GRANT ALL ON ppkwebstat.* TO 'ppkwebstat_admin'@'%';
+GO
+CREATE DATABASE IF NOT EXISTS superset;
+CREATE USER 'superset_admin'@'%' IDENTIFIED WITH mysql_native_password BY 'Kolema_2159';
+GRANT ALL ON superset.* TO 'superset_admin'@'%';
+GO
+CREATE DATABASE IF NOT EXISTS airflow;
+CREATE USER 'airflow_admin'@'%' IDENTIFIED WITH mysql_native_password BY 'Kolema_2159';
+GRANT ALL ON airflow.* TO 'airflow_admin'@'%';
+GO
+CREATE DATABASE IF NOT EXISTS keycloak CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER 'keycloak_admin'@'%' IDENTIFIED WITH mysql_native_password BY 'Kolema_2159';
+GRANT ALL ON keycloak.* TO 'keycloak_admin'@'%';

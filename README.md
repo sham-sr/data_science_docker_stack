@@ -52,7 +52,7 @@ add self-written **jupyter_proxy_extensions** to be able to run bokeh, panel, fl
 add code-server, and same vscode extensions  
 ***osmnx*** - [OSMnx](https://github.com/gboeing/osmnx)  
 to build an image select folder and run build  
-`docker-compose.yml build`
+`docker-compose.yml build`  
 if you want to run notebook in single mode, generate the token with the generate_token script.py and add it to *.env*  
 `docker-compose.yml up -d`
 7. Run JupyterHub  

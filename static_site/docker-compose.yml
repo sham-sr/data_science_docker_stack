@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+ static-site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: static-site
+    restart: always
+    container_name: static-site
+    labels: # Traefik configuration.
+      - traefik.http.routers.web.rule=Host(`${VIRTUAL_HOST}`)
+      - traefik.http.routers.web.tls=true
+      - traefik.http.routers.web.tls.certresolver=lets-encrypt
+      - traefik.http.routers.web.service=web-service
+      - traefik.http.services.web-service.loadbalancer.server.port=${VIRTUAL_PORT}
+    volumes:
+      - ./content:/usr/share/nginx/html 
+
+networks:
+  default:
+    external:
+      name: webproxy   
+

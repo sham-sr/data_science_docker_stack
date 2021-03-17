@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  jupyter_notebook:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    image: jupyterlab_dotnet
+    container_name: jupyterlab_dotnet  
+    restart: always
+    volumes:
+      - dev_work:/home/jovyan/work
+    labels: # Traefik configuration.
+     #
+      - traefik.http.routers.jupyter.rule=Host(`${VIRTUAL_HOST_JUP}`)
+      - traefik.http.routers.jupyter.tls=true
+      - traefik.http.routers.jupyter.tls.certresolver=lets-encrypt
+      - traefik.http.routers.jupyter.service=jupyter-service
+      - traefik.http.services.jupyter-service.loadbalancer.server.port=${VIRTUAL_PORT_JUP}
+    environment:
+      JUPYTER_ENABLE_LAB: 'yes'
+    command: "start-notebook.sh --NotebookApp.password=${ACCESS_TOKEN}"
+volumes:
+  dev_work:
+  
+networks:
+  default:
+    external:
+      name: webproxy

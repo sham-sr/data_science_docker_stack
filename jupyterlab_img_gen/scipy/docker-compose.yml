@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  jupyter_notebook:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    image: jupyterlab_scipy
+    container_name: jupyterlab_scipy  
+    restart: always
+    volumes:
+      - dev_work:/home/jovyan/work
+    labels: # Traefik configuration.
+     #
+      - traefik.http.routers.jupyter.rule=Host(`${VIRTUAL_HOST_JUP}`)
+      - traefik.http.routers.jupyter.tls=true
+      - traefik.http.routers.jupyter.tls.certresolver=lets-encrypt
+      - traefik.http.routers.jupyter.service=jupyter-service
+      - traefik.http.services.jupyter-service.loadbalancer.server.port=${VIRTUAL_PORT_JUP}
+     #
+     # - traefik.http.routers.streamlit.rule=Host(`${VIRTUAL_HOST_ST}`)
+     # - traefik.http.routers.streamlit.tls=true
+     # - traefik.http.routers.streamlit.tls.certresolver=lets-encrypt
+     # - traefik.http.routers.streamlit.service=streamlit-service
+     # - traefik.http.services.streamlit-service.loadbalancer.server.port=${VIRTUAL_PORT_ST}
+     #
+     # - traefik.http.routers.bockeh.rule=Host(`${VIRTUAL_HOST_BK}`)
+     # - traefik.http.routers.bockeh.tls=true
+     # - traefik.http.routers.bockeh.tls.certresolver=lets-encrypt
+     # - traefik.http.routers.bockeh.service=bockeh-service
+     # - traefik.http.services.bockeh-service.loadbalancer.server.port=${VIRTUAL_PORT_BK}
+     #
+     # - traefik.http.routers.dask.rule=Host(`${VIRTUAL_HOST_D}`)
+     # - traefik.http.routers.dask.tls=true
+     # - traefik.http.routers.dask.tls.certresolver=lets-encrypt
+     # - traefik.http.routers.dask.service=dask-service
+     # - traefik.http.services.dask-service.loadbalancer.server.port=${VIRTUAL_PORT_D}
+     #
+     # - traefik.http.routers.flask.rule=Host(`${VIRTUAL_HOST_FL}`)
+     # - traefik.http.routers.flask.tls=true
+     # - traefik.http.routers.flask.tls.certresolver=lets-encrypt
+     # - traefik.http.routers.flask.service=flask-service
+     # - traefik.http.services.flask-service.loadbalancer.server.port=${VIRTUAL_PORT_FL}
+    environment:
+      JUPYTER_ENABLE_LAB: 'yes'
+    command: "start-notebook.sh --NotebookApp.password=${ACCESS_TOKEN}"
+volumes:
+  dev_work:
+  
+networks:
+  default:
+    external:
+      name: webproxy

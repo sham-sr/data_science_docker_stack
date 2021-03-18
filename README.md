@@ -12,7 +12,7 @@ This is a project for the deployment of popular services for data analysis in th
 **Authorization**  
 [keycloak](https://github.com/keycloak/keycloak-containers)  
 [openldap](https://github.com/osixia/docker-openldap)  
-As a backend DB MySQL8  
+As a backend DB MySQL 8  
 ## How to deploy  
 The docker-compose parameters are set in *.env* files. Before you build or run the docker-compose file, rename the *.envexample* to *.env* and edit it to match your environment.  
 1. Create a *"webproxy"* network  

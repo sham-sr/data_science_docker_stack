@@ -5,6 +5,7 @@ FROM jupyter/scipy-notebook:latest
 USER root
 RUN apt-get update && apt-get install -yq --no-install-recommends \
     curl \
+    ssh-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install code-server

@@ -37,20 +37,20 @@ docker-compose up –d`
 wait until the database is initialized (on HHD it can take a long time up to 12 minutes, follow the logs)  
 6. Run JupyterLab and create image for JupyterHub users  
 Go to the jupyterlab_img_gen folder, to the dokerfile folder for different target notebooks that can be run in single-player mode and after creating images use images in jupyterhub.  
-***scipy*** - based on [scipy-notebook](https://github.com/jupyter/docker-stacks/tree/master/scipy-notebook), with add some conda, pip lib (select in conda_requirements.txt, pip_requirements.txt), JupyterLab extensions:  
-* lckr-jupyterlab-variableinspector  
-* ipyleaflet  
-* jupyterlab-git  
-* jupyterlab_widgets  
-* jupyter-server-proxy  
-* jupyterlab_execute_time  
-* jupyterlab-kite  
-* jupyterlab-system-monitor  
+* ***scipy*** - based on [scipy-notebook](https://github.com/jupyter/docker-stacks/tree/master/scipy-notebook), with add some conda, pip lib (select in conda_requirements.txt, pip_requirements.txt), JupyterLab extensions:  
+** lckr-jupyterlab-variableinspector  
+** ipyleaflet  
+** jupyterlab-git  
+** jupyterlab_widgets  
+** jupyter-server-proxy  
+** jupyterlab_execute_time  
+** jupyterlab-kite  
+** jupyterlab-system-monitor  
 add [code-server](https://github.com/cdr/code-server)  
 add self-written **jupyter_proxy_extensions** to be able to run bokeh, panel, flask, streamlit behind a proxy server    
-***dotnet*** - based on [dotnet_interactive](https://github.com/dotnet/interactive)  
+* ***dotnet*** - based on [dotnet_interactive](https://github.com/dotnet/interactive)  
 add code-server, and same vscode extensions  
-***osmnx*** - [OSMnx](https://github.com/gboeing/osmnx)  
+* ***osmnx*** - [OSMnx](https://github.com/gboeing/osmnx)  
 to build an image select folder and run build  
 `docker-compose.yml build`  
 if you want to run notebook in single mode, generate the token with the generate_token script.py and add it to *.env*  

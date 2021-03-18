@@ -1,0 +1,41 @@
+# =====================================
+# Database environment
+#
+
+#DB_TYPE=postgres
+DB_TYPE=mysql
+
+DB_NAME=metabase_db
+DB_USER=metabase_admin
+DB_PASSWORD=password
+DB_ROOT_PASSWORD=password
+DB_OUTSIDE_VOLUME=mysql-data
+MB_REPORT_TIMEZONE=Europe/Moscow
+
+# -------------------------------------
+# - MySQL specifics
+
+DB_PORT=3306
+DB_INSIDE_VOLUME=/var/lib/mysql
+
+# -------------------------------------
+# - Postgres specifics
+
+#DB_PORT=5432
+#DB_INSIDE_VOLUME=/var/lib/postgresql/data
+
+# =====================================
+# Metabase environment
+#
+
+MB_DB_FILE=/metabase-data/metabase.db
+MB_PORT=3000
+MB_VOLUME=mb-data
+MB_ENCRYPTION_SECRET_KEY=insertlongkey
+
+# virtual environment
+VIRTUAL_HOST=metabase.yourdomain.ru
+VIRTUAL_PORT=3000
+LETSENCRYPT_HOST=metabase.yourdomain.ru
+LETSENCRYPT_EMAIL=shamsuyarov@promservice-ek.ru
+

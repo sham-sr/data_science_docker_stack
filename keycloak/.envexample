@@ -1,0 +1,9 @@
+DB_VENDOR=MYSQL
+DB_ADDR=mysql
+DB_DATABASE=keycloak
+DB_USER=keycloak_admin
+DB_PASSWORD=password
+KEYCLOAK_USER=keycloak_admin
+KEYCLOAK_PASSWORD=password
+VIRTUAL_HOST=keycloak.yourdomain.ru
+VIRTUAL_PORT=8080

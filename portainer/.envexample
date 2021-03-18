@@ -1,0 +1,4 @@
+VIRTUAL_HOST=portainer.yourdomain.ru
+VIRTUAL_PORT=9000
+LETSENCRYPT_HOST=portainer.yourdomain.ru
+LETSENCRYPT_EMAIL=shamsuyarov@promservice-ek.ru

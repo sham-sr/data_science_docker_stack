@@ -1,0 +1,13 @@
+DB_NAME=metabase_db
+DB_USER=metabase_admin
+DB_PASSWORD=password
+DB_ROOT_PASSWORD=password
+# - MySQL specifics
+DB_PORT=3306
+DB_EXT_PORT =5506
+TIMEZONE=Europe/Moscow
+
+VIRTUAL_HOST=phpmyadmin.yourdomain.ru
+VIRTUAL_PORT=80
+LETSENCRYPT_HOST=phpmyadmin.yourdomain.ru
+LETSENCRYPT_EMAIL=shamsuyarov@promservice-ek.ru

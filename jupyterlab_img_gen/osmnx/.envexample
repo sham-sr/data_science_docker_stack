@@ -1,0 +1,30 @@
+# Define a local data directory
+# Set permissions for the container:
+#   sudo chown -R 1000 ${LOCAL_WORKING_DIR}
+#LOCAL_WORKING_DIR=/data/jupyter/notebooks
+
+# Provide data sets
+#LOCAL_DATASETS=/data/jupyter/datasets
+
+# Provide local modules
+LOCAL_MODULES=./python_modules
+
+ACCESS_TOKEN=sha1:faf80a1c0a1e:46621aa155c5856cd4d9c01a62e0a5cccbe92b6b
+
+VIRTUAL_HOST_JUP=jupyter.yourdomain.ru
+VIRTUAL_PORT_JUP=8888
+
+VIRTUAL_HOST_ST=streamlit.yourdomain.ru
+VIRTUAL_PORT_ST=8501
+
+VIRTUAL_HOST_BK=bockeh.yourdomain.ru
+VIRTUAL_PORT_BK=5006
+
+VIRTUAL_HOST_D=dask.yourdomain.ru
+VIRTUAL_PORT_D=8787
+
+VIRTUAL_HOST_FL=flask.yourdomain.ru
+VIRTUAL_PORT_FL=5000
+
+
+

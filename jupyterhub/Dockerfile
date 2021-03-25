@@ -7,5 +7,5 @@ RUN pip install --no-cache dockerspawner \
                            jupyterhub-idle-culler \
                            jupyter oauthenticator \
                            pyjwt==1.7.1 \
-                           keycloakauthenticator 
+                           keycloakauthenticator==1.0.0 
                            

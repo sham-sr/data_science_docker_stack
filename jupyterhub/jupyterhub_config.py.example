@@ -43,7 +43,7 @@ c.DockerSpawner.remove_containers = True
 # see https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/'
 c.DockerSpawner.notebook_dir = notebook_dir
-c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
+c.DockerSpawner.volumes = { 'jupyterhub-{username}-{imagename}': notebook_dir }
 
 # Other stuff
 c.Spawner.cpu_limit = 5

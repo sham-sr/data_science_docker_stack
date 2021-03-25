@@ -29,6 +29,7 @@ vaex
 flask
 voila
 python-telegram-bot
+pandasgui
 lckr-jupyterlab-variableinspector
 ipyleaflet
 jupyterlab-git==0.30.0b1

@@ -58,7 +58,8 @@ RUN cd ${HOME}/work/jupyter_proxy_extensions/vscode_web && \
 
 #Install  and build labextension
 RUN  \
-     jupyter labextension install -y --no-build @jupyterlab/server-proxy && \   
+     jupyter labextension install -y --no-build @jupyterlab/server-proxy && \  
+     jupyter labextension install -y --no-build jupyterlab-plotly && \
      jupyter lab build --debug && \
      jupyter lab clean && \
      npm cache clean --force && \

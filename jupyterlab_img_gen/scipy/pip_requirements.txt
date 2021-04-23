@@ -38,4 +38,4 @@ jupyter-server-proxy
 jupyterlab_execute_time
 jupyterlab-kite>=2.0.2
 jupyterlab-system-monitor
-
+jupyter_bokeh
